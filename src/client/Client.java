@@ -21,13 +21,13 @@ public class Client {
         socket = new Socket(address, port);
         out = new ObjectOutputStream(socket.getOutputStream());
 
-//        ClientSend cs = new ClientSend(socket, out);
-//        ClientReceive cr = new ClientReceive(this, socket);
+        ClientSend cs = new ClientSend(socket, out);
+        ClientReceive cr = new ClientReceive(this, socket);
 
-//        Thread threadClientSend = new Thread(cs);
-//        Thread threadClientReceive = new Thread(cr);
-//        threadClientSend.start();
-//        threadClientReceive.start();
+        Thread threadClientSend = new Thread(cs);
+        Thread threadClientReceive = new Thread(cr);
+        threadClientSend.start();
+        threadClientReceive.start();
     }
 
     public void disconnectedServer() throws IOException {

@@ -14,13 +14,13 @@ public class MainGui extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        String address = this.getParameters().getRaw().get(0);
-        int port = Integer.parseInt(this.getParameters().getRaw().get(1));
+//        String address = this.getParameters().getRaw().get(0);
+//        int port = Integer.parseInt(this.getParameters().getRaw().get(1));
 
         ClientPanel clientPanel = new ClientPanel();
-        Client client = new Client(address, port);
-        clientPanel.setClient(client);
-        client.setView(clientPanel);
+//        Client client = new Client(address, port);
+//        clientPanel.setClient(client);
+//        client.setView(clientPanel);
         Group root = new Group();
         root.getChildren().add(clientPanel);
 
