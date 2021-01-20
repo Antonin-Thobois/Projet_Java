@@ -14,6 +14,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.TextFlow;
 
+import java.io.IOException;
+
 
 public class ClientPanel extends Parent {
     private TextArea textToSend;
@@ -47,12 +49,14 @@ public class ClientPanel extends Parent {
         sendBtn.setPrefHeight(30);
         sendBtn.setText("Send");
         sendBtn.setVisible(true);
-        sendBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Message mess = new Message("Moi", textToSend.getText());
-                printNewMessage(mess);
-                textToSend.setText("");
+        sendBtn.setOnAction(event -> {
+            Message mess = new Message("Moi", textToSend.getText());
+            printNewMessage(mess);
+            textToSend.setText("");
+            try {
+                client.sendMessage(mess);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
 
@@ -62,12 +66,7 @@ public class ClientPanel extends Parent {
         clearBtn.setPrefHeight(30);
         clearBtn.setVisible(true);
         clearBtn.setText("Clear");
-        clearBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                textToSend.setText("");
-            }
-        });
+        clearBtn.setOnAction(event -> textToSend.setText(""));
 
         receivedText.setVisible(true);
 
@@ -75,13 +74,15 @@ public class ClientPanel extends Parent {
         textToSend.setLayoutY(450);
         textToSend.setPrefWidth(310);
         textToSend.setPrefHeight(100);
-        textToSend.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if (keyEvent.getCode() == KeyCode.ENTER)  {
-                    Message mess = new Message("Moi", textToSend.getText());
-                    printNewMessage(mess);
-                    textToSend.setText("");
+        textToSend.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)  {
+                Message mess = new Message("Moi", textToSend.getText());
+                printNewMessage(mess);
+                textToSend.setText("");
+                try {
+                    client.sendMessage(mess);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -93,14 +94,11 @@ public class ClientPanel extends Parent {
     }
 
     public void printNewMessage(Message mess) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Label text = new Label(mess.toString() + "\n");
-                text.setPrefWidth(receivedText.getPrefWidth() - 20);
-                text.setAlignment(Pos.CENTER_LEFT);
-                receivedText.getChildren().add(text);
-            }
+        Platform.runLater(() -> {
+            Label text = new Label(mess.toString() + "\n");
+            text.setPrefWidth(receivedText.getPrefWidth() - 20);
+            text.setAlignment(Pos.CENTER_LEFT);
+            receivedText.getChildren().add(text);
         });
     }
 

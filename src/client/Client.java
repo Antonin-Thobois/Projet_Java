@@ -24,9 +24,9 @@ public class Client {
         ClientSend cs = new ClientSend(socket, out);
         ClientReceive cr = new ClientReceive(this, socket);
 
-        Thread threadClientSend = new Thread(cs);
+        //Thread threadClientSend = new Thread(cs);
         Thread threadClientReceive = new Thread(cr);
-        threadClientSend.start();
+        //threadClientSend.start();
         threadClientReceive.start();
     }
 
@@ -39,8 +39,14 @@ public class Client {
         System.exit(0);
     }
 
+    public void sendMessage(Message mess) throws IOException {
+        this.out.writeObject(mess);
+        this.out.flush();
+    }
+
     public void messageReceived(Message mess) {
         System.out.println("\n" + mess);
+        view.printNewMessage(mess);
     }
 
     public void setView(ClientPanel view) {
