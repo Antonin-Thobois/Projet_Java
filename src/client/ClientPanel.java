@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.text.TextFlow;
 
 import java.io.IOException;
@@ -24,6 +23,7 @@ public class ClientPanel extends Parent {
     private Button sendBtn;
     private Button clearBtn;
     private Client client;
+    private Label nomLabel;
 
     public ClientPanel() {
         textToSend = new TextArea();
@@ -31,6 +31,7 @@ public class ClientPanel extends Parent {
         receivedText = new TextFlow();
         sendBtn = new Button();
         clearBtn = new Button();
+        nomLabel = new Label("");
 
 
         scrollReceivedText = new ScrollPane();
@@ -42,6 +43,12 @@ public class ClientPanel extends Parent {
         scrollReceivedText.vvalueProperty().bind(receivedText.heightProperty());
 
         receivedText.setPrefWidth(395);
+
+        nomLabel.setLayoutX(50);
+        nomLabel.setLayoutY(20);
+        nomLabel.setPrefHeight(20);
+        nomLabel.setPrefWidth(100);
+        nomLabel.setVisible(true);
 
         sendBtn.setLayoutX(370);
         sendBtn.setLayoutY(450);
@@ -74,9 +81,9 @@ public class ClientPanel extends Parent {
         textToSend.setLayoutY(450);
         textToSend.setPrefWidth(310);
         textToSend.setPrefHeight(100);
-        textToSend.setOnKeyPressed(keyEvent -> {
+        textToSend.setOnKeyReleased(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)  {
-                Message mess = new Message("Moi", textToSend.getText());
+                Message mess = new Message("Moi", textToSend.getText().substring(0, textToSend.getText().length() - 1));
                 printNewMessage(mess);
                 textToSend.setText("");
                 try {
@@ -91,6 +98,7 @@ public class ClientPanel extends Parent {
         this.getChildren().add(textToSend);
         this.getChildren().add(clearBtn);
         this.getChildren().add(sendBtn);
+        this.getChildren().add(nomLabel);
     }
 
     public void printNewMessage(Message mess) {
@@ -98,7 +106,15 @@ public class ClientPanel extends Parent {
             Label text = new Label(mess.toString() + "\n");
             text.setPrefWidth(receivedText.getPrefWidth() - 20);
             text.setAlignment(Pos.CENTER_LEFT);
+            if (mess.toString().startsWith("Server : Hello")) {
+                String username = mess.toString();
+                username = username.split("You are ")[1];
+                username = username.split("\\. ")[0];
+                nomLabel.setText(username);
+            }
+
             receivedText.getChildren().add(text);
+
         });
     }
 
@@ -148,5 +164,13 @@ public class ClientPanel extends Parent {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public Label getNomLabel() {
+        return nomLabel;
+    }
+
+    public void setNomLabel(Label nomLabel) {
+        this.nomLabel = nomLabel;
     }
 }
