@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.net.URL;
 
 
@@ -19,7 +20,7 @@ public class MainGui extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
 //        String address = this.getParameters().getRaw().get(0);
 //        int port = Integer.parseInt(this.getParameters().getRaw().get(1));
 
