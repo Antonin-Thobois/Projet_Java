@@ -26,7 +26,7 @@ public class MainGui extends Application {
 
         Scene scene = new Scene(root, 500, 600);
 
-        stage.setTitle("Jeu");
+        stage.setTitle("Puissance 4");
 
         stage.setScene(scene);
         stage.show();
