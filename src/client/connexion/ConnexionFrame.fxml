@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox prefHeight="600.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.connexion.ConnexionFrameController">
+  <children>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Text id="T_Username" fx:id="T_Username" layoutX="223.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
+            <TextField id="TF_Username" fx:id="TF_Username" layoutX="176.0" layoutY="124.0" promptText="John Doe" />
+            <Text id="T_Password" fx:id="T_Password" layoutX="224.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" />
+            <PasswordField id="PF_Password" fx:id="PF_Password" layoutX="176.0" layoutY="185.0" />
+            <Button id="B_Connexion" fx:id="B_Connexion" layoutX="250.0" layoutY="230.0" mnemonicParsing="false" onAction="#B_C_Connexion" text="Connexion" />
+            <Button id="B_Inscription" fx:id="B_Inscription" layoutX="176.0" layoutY="230.0" mnemonicParsing="false" onAction="#B_C_Inscription" text="Inscription" />
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>

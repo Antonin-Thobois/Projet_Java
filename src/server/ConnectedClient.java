@@ -12,7 +12,6 @@ import java.net.Socket;
 public class ConnectedClient implements Runnable {
     private static int idCounter = 1;
     private int id;
-    private String nom = "User ";
     private Server server;
     private Socket socket;
     private ObjectOutputStream out;
@@ -21,7 +20,6 @@ public class ConnectedClient implements Runnable {
     public ConnectedClient(Server server, @NotNull Socket socket) throws IOException {
         this.id = idCounter;
         idCounter++;
-        this.nom = nom + id;
         this.server = server;
         this.socket = socket;
         out = new ObjectOutputStream(socket.getOutputStream());
@@ -39,13 +37,13 @@ public class ConnectedClient implements Runnable {
             } catch (IOException e) {
                 isActive = false;
                 server.disconnectedClient(this);
+                //e.printStackTrace();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
 
             if (mess != null) {
-                //on change le sender
-                mess.setSender(nom);
+                mess.setSender(String.valueOf(id));
                 try {
                     server.broadcastMessage(mess, id);
                 } catch (IOException e) {
@@ -119,13 +117,5 @@ public class ConnectedClient implements Runnable {
 
     public void setIn(ObjectInputStream in) {
         this.in = in;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
     }
 }

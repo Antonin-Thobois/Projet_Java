@@ -11,7 +11,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.TextFlow;
+import jeu.Jeu;
+import server.Server;
 
 import java.io.IOException;
 
@@ -22,8 +25,9 @@ public class ClientPanel extends Parent {
     private TextFlow receivedText;
     private Button sendBtn;
     private Button clearBtn;
+    private Button jouerBtn;
     private Client client;
-    private Label nomLabel;
+    private Server sv;
 
     public ClientPanel() {
         textToSend = new TextArea();
@@ -31,7 +35,7 @@ public class ClientPanel extends Parent {
         receivedText = new TextFlow();
         sendBtn = new Button();
         clearBtn = new Button();
-        nomLabel = new Label("");
+        jouerBtn = new Button();
 
 
         scrollReceivedText = new ScrollPane();
@@ -44,36 +48,50 @@ public class ClientPanel extends Parent {
 
         receivedText.setPrefWidth(395);
 
-        nomLabel.setLayoutX(50);
-        nomLabel.setLayoutY(20);
-        nomLabel.setPrefHeight(20);
-        nomLabel.setPrefWidth(100);
-        nomLabel.setVisible(true);
-
         sendBtn.setLayoutX(370);
         sendBtn.setLayoutY(450);
         sendBtn.setPrefWidth(80);
         sendBtn.setPrefHeight(30);
         sendBtn.setText("Send");
         sendBtn.setVisible(true);
-        sendBtn.setOnAction(event -> {
-            Message mess = new Message("Moi", textToSend.getText());
-            printNewMessage(mess);
-            textToSend.setText("");
-            try {
-                client.sendMessage(mess);
-            } catch (IOException e) {
-                e.printStackTrace();
+        sendBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Message mess = new Message("Moi", textToSend.getText());
+                printNewMessage(mess);
+                textToSend.setText("");
             }
         });
 
         clearBtn.setLayoutX(370);
-        clearBtn.setLayoutY(520);
+        clearBtn.setLayoutY(485);
         clearBtn.setPrefWidth(80);
         clearBtn.setPrefHeight(30);
         clearBtn.setVisible(true);
         clearBtn.setText("Clear");
-        clearBtn.setOnAction(event -> textToSend.setText(""));
+        clearBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                textToSend.setText("");
+            }
+        });
+
+        jouerBtn.setLayoutX(370);
+        jouerBtn.setLayoutY(520);
+        jouerBtn.setPrefWidth(80);
+        jouerBtn.setPrefHeight(30);
+        jouerBtn.setVisible(true);
+        jouerBtn.setText("Jouer");
+        jouerBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    Server.jouer(client);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         receivedText.setVisible(true);
 
@@ -81,15 +99,13 @@ public class ClientPanel extends Parent {
         textToSend.setLayoutY(450);
         textToSend.setPrefWidth(310);
         textToSend.setPrefHeight(100);
-        textToSend.setOnKeyReleased(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)  {
-                Message mess = new Message("Moi", textToSend.getText().substring(0, textToSend.getText().length() - 1));
-                printNewMessage(mess);
-                textToSend.setText("");
-                try {
-                    client.sendMessage(mess);
-                } catch (IOException e) {
-                    e.printStackTrace();
+        textToSend.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER)  {
+                    Message mess = new Message("Moi", textToSend.getText());
+                    printNewMessage(mess);
+                    textToSend.setText("");
                 }
             }
         });
@@ -98,23 +114,18 @@ public class ClientPanel extends Parent {
         this.getChildren().add(textToSend);
         this.getChildren().add(clearBtn);
         this.getChildren().add(sendBtn);
-        this.getChildren().add(nomLabel);
+        this.getChildren().add(jouerBtn);
     }
 
     public void printNewMessage(Message mess) {
-        Platform.runLater(() -> {
-            Label text = new Label(mess.toString() + "\n");
-            text.setPrefWidth(receivedText.getPrefWidth() - 20);
-            text.setAlignment(Pos.CENTER_LEFT);
-            if (mess.toString().startsWith("Server : Hello")) {
-                String username = mess.toString();
-                username = username.split("You are ")[1];
-                username = username.split("\\. ")[0];
-                nomLabel.setText(username);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Label text = new Label(mess.toString() + "\n");
+                text.setPrefWidth(receivedText.getPrefWidth() - 20);
+                text.setAlignment(Pos.CENTER_LEFT);
+                receivedText.getChildren().add(text);
             }
-
-            receivedText.getChildren().add(text);
-
         });
     }
 
@@ -164,13 +175,5 @@ public class ClientPanel extends Parent {
 
     public void setClient(Client client) {
         this.client = client;
-    }
-
-    public Label getNomLabel() {
-        return nomLabel;
-    }
-
-    public void setNomLabel(Label nomLabel) {
-        this.nomLabel = nomLabel;
     }
 }

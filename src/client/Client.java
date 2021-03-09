@@ -10,7 +10,6 @@ import java.net.Socket;
 public class Client {
     private String address;
     private int port;
-    private String username;
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -19,22 +18,6 @@ public class Client {
     public Client(String address, int port) throws IOException {
         this.address = address;
         this.port = port;
-        socket = new Socket(address, port);
-        out = new ObjectOutputStream(socket.getOutputStream());
-
-        ClientSend cs = new ClientSend(socket, out);
-        ClientReceive cr = new ClientReceive(this, socket);
-
-        //Thread threadClientSend = new Thread(cs);
-        Thread threadClientReceive = new Thread(cr);
-        //threadClientSend.start();
-        threadClientReceive.start();
-    }
-
-    public Client(String address, int port, String username) throws IOException {
-        this.address = address;
-        this.port = port;
-        this.username = username;
         socket = new Socket(address, port);
         out = new ObjectOutputStream(socket.getOutputStream());
 
@@ -56,14 +39,8 @@ public class Client {
         System.exit(0);
     }
 
-    public void sendMessage(Message mess) throws IOException {
-        this.out.writeObject(mess);
-        this.out.flush();
-    }
-
     public void messageReceived(Message mess) {
         System.out.println("\n" + mess);
-        view.printNewMessage(mess);
     }
 
     public void setView(ClientPanel view) {
