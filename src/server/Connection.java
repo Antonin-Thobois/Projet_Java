@@ -10,7 +10,7 @@ public class Connection implements Runnable {
 
     public Connection(Server server) throws IOException {
         this.server = server;
-        this.serverSocket = new ServerSocket(server.getPort());;
+        this.serverSocket = new ServerSocket(server.getPort());
     }
 
     @Override
@@ -26,11 +26,13 @@ public class Connection implements Runnable {
 
             if (sockNewClient != null) {
                 ConnectedClient newClient = null;
+
                 try {
                     newClient = new ConnectedClient(server, sockNewClient);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 try {
                     server.addClient(newClient);
                 } catch (IOException e) {

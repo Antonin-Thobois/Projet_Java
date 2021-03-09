@@ -18,15 +18,15 @@ public class MainGui extends Application {
 //        int port = Integer.parseInt(this.getParameters().getRaw().get(1));
 
         ClientPanel clientPanel = new ClientPanel();
-//        Client client = new Client(address, port);
-//        clientPanel.setClient(client);
-//        client.setView(clientPanel);
+        Client client = new Client("localhost", 10000);
+        clientPanel.setClient(client);
+        client.setView(clientPanel);
         Group root = new Group();
         root.getChildren().add(clientPanel);
 
         Scene scene = new Scene(root, 500, 600);
 
-        stage.setTitle("Mon Application");
+        stage.setTitle("Puissance 4");
 
         stage.setScene(scene);
         stage.show();

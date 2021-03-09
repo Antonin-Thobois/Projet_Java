@@ -59,13 +59,13 @@ public class Server {
     }
 
     public void addClient(ConnectedClient newClient) throws IOException {
-        Message mess = new Message(String.valueOf(newClient.getId())," vient de se connecter");
-        mess.setSender("Serveur");
+        Message mess = new Message("Server",newClient.getNom() + " vient de se connecter.");
 
         for (ConnectedClient client : clients) {
             client.sendMessage(mess);
         }
-
+        newClient.sendMessage(new Message("Server", "Hello! You are " + newClient.getNom() + ". Good luck and have fun !"));
         this.clients.add(newClient);
+
     }
 }
